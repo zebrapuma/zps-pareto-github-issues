@@ -1,0 +1,8 @@
+{"data":{"repository":{"issues":{"nodes":[
+{"number":1,"title":"never scored","updatedAt":"2026-10-01T10:00:00Z","labels":{"nodes":[{"name":"bug"}]},"comments":{"nodes":[]}},
+{"number":2,"title":"scored, untouched","updatedAt":"2026-10-01T10:00:30Z","labels":{"nodes":[{"name":"priority: high"}]},"comments":{"nodes":[{"body":"Pareto score: 18.5 -> P0 (V5 x I4 x R2 / E2, 2026-10-01). Blocks invoicing.","createdAt":"2026-10-01T10:00:00Z"}]}},
+{"number":3,"title":"commented after score","updatedAt":"2026-10-05T09:00:00Z","labels":{"nodes":[{"name":"priority:medium"}]},"comments":{"nodes":[{"body":"Pareto score: 6 -> P1 (x)","createdAt":"2026-10-01T10:00:00Z"},{"body":"new info","createdAt":"2026-10-05T09:00:00Z"}]}},
+{"number":4,"title":"class label but no score comment","updatedAt":"2026-10-01T10:00:00Z","labels":{"nodes":[{"name":"pareto:P2"}]},"comments":{"nodes":[{"body":"hello","createdAt":"2026-10-01T10:00:00Z"}]}},
+{"number":5,"title":"two scores, last wins, quick win","updatedAt":"2026-10-03T10:01:00Z","labels":{"nodes":[{"name":"priority:medium"},{"name":"pareto:quick-win"}]},"comments":{"nodes":[{"body":"Pareto score: 2 -> P2","createdAt":"2026-10-01T10:00:00Z"},{"body":"Pareto score: 20 -> P1 + quick-win (V5 x I4 x R1 / E1)","createdAt":"2026-10-03T10:00:00Z"}]}},
+{"number":6,"title":"unmapped default label is ignored","updatedAt":"2026-10-01T10:00:00Z","labels":{"nodes":[{"name":"pareto:P0"}]},"comments":{"nodes":[]}}
+]}}}}

@@ -1,0 +1,43 @@
+name: release
+
+# Runs on the tag created by `claude plugin tag --push` (format zps-pareto--vX.Y.Z).
+on:
+  push:
+    tags: ["zps-pareto--v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check that the tag matches plugin.json
+        run: |
+          version=$(jq -r .version .claude-plugin/plugin.json)
+          if [ "${GITHUB_REF_NAME#zps-pareto--v}" != "$version" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match plugin.json version $version"
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Extract release notes from CHANGELOG.md
+        run: |
+          awk -v v="$VERSION" '/^## \[/ { p = (index($0, "## [" v "]") == 1); next } /^\[[^]]+\]: / { next } p' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "No CHANGELOG.md entry for $VERSION"
+            exit 1
+          fi
+          {
+            echo
+            echo "Install or update: \`claude plugin marketplace update zebrapuma\` then \`claude plugin update zps-pareto@zebrapuma\`."
+            echo
+            echo "Built by [Régis Scyeur](https://regis.scyeur.net/en/) at [ZebraPuma Services](https://zebrapuma.be)."
+          } >> notes.md
+
+      - name: Create the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --verify-tag --title "zps-pareto v$VERSION" --notes-file notes.md

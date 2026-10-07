@@ -1,0 +1,66 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1" # weekly, to catch dead links and Claude Code changes
+
+permissions:
+  contents: read
+
+jobs:
+  plugin:
+    name: Plugin manifest and style
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Install Claude Code
+        run: npm install --global @anthropic-ai/claude-code
+
+      - name: Validate plugin
+        run: claude plugin validate --strict .
+
+      - name: ShellCheck
+        run: shellcheck -x scripts/*.sh tests/run.sh
+
+      - name: No em or en dashes
+        run: |
+          if grep -rnP '[\x{2013}\x{2014}]' --exclude-dir=.git .; then
+            echo "Replace em/en dashes with a comma, a colon, parentheses or a plain hyphen."
+            exit 1
+          fi
+
+  tests:
+    name: Script tests (gojq, as embedded in gh)
+    runs-on: ubuntu-latest
+    env:
+      GOJQ_VERSION: v0.12.17
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install gojq
+        run: |
+          curl -sSL "https://github.com/itchyny/gojq/releases/download/${GOJQ_VERSION}/gojq_${GOJQ_VERSION}_linux_amd64.tar.gz" | tar -xz
+          sudo mv "gojq_${GOJQ_VERSION}_linux_amd64/gojq" /usr/local/bin/
+
+      - name: Run tests
+        run: bash tests/run.sh
+
+  links:
+    name: Links in documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          # Release links in CHANGELOG.md exist only once the tag is pushed.
+          args: --no-progress --exclude-path tests --exclude "/releases/tag/" "**/*.md"
+          fail: true
