@@ -15,7 +15,7 @@ jobs:
     name: Plugin manifest and style
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v7
         with:
@@ -43,7 +43,7 @@ jobs:
     env:
       GOJQ_VERSION: v0.12.17
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Install gojq
         run: |
@@ -57,7 +57,7 @@ jobs:
     name: Links in documentation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - uses: lycheeverse/lychee-action@v2
         with:
