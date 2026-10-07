@@ -1,0 +1,34 @@
+name: Request
+description: New request, to be scored with the Pareto rules
+labels: ["pareto:request"]
+body:
+  - type: input
+    id: requester
+    attributes:
+      label: Requester
+    validations:
+      required: true
+  - type: dropdown
+    id: channel
+    attributes:
+      label: Channel
+      options: [Email, Chat, Call, Meeting, Other]
+  - type: textarea
+    id: need
+    attributes:
+      label: Need
+      description: The problem to solve, not the imagined solution.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+  - type: input
+    id: deadline
+    attributes:
+      label: Deadline
+  - type: textarea
+    id: original
+    attributes:
+      label: Original request (pasted email / notes)
