@@ -35,9 +35,11 @@ Ask which one applies (an existing `.claude/pareto.md` usually tells: a `## Port
 
 ## 4. CLAUDE.md block
 - Content: `${CLAUDE_PLUGIN_ROOT}/templates/CLAUDE.block.md` (delimited by `<!-- pareto:start -->` / `<!-- pareto:end -->`).
-- `CLAUDE.md` missing: create it with the block.
-- Present with markers: replace only the block between markers.
+- **Target file.** A root `CLAUDE.md` is not loaded as project context in a Claude Code plugin, and `claude plugin validate --strict` rejects it. So when `.claude-plugin/plugin.json` exists at the repository root (the repository is itself a plugin), target `.claude/CLAUDE.md` instead, and say why. Otherwise target `CLAUDE.md` at the root.
+- Target missing: create it with the block (create `.claude/` first when needed).
+- Present with markers: replace only the block between markers (`<!-- pareto:start -->` to `<!-- pareto:end -->`), so a block written by an older plugin version is updated, for example a `Fixes #123` instruction.
 - Present without markers: append the block at the end; touch nothing else.
+- In a plugin repository, if a root `CLAUDE.md` already contains the markers, warn that CI will reject it and offer to move the block to `.claude/CLAUDE.md`; never delete the file without asking.
 
 ## 5. Issue template
 - Skip on a hub that holds no issues.
