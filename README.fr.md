@@ -36,6 +36,7 @@ Ou active une fois la mise à jour automatique de cette marketplace : `/plugin`,
 | `/zps-pareto:intake <demande>` | Transforme un mail, un message ou des notes d'appel en issue GitHub scorée. Détecte les doublons, découpe les demandes multiples, choisit le bon repo dans un portefeuille. |
 | `/zps-pareto:triage [owner/repo \| all] [full]` | Score les issues ouvertes, isole les ~20 % qui portent ~80 % de la valeur, propose l'ordre du jour, met à jour les labels après confirmation. Incrémental : seules les issues nouvelles ou modifiées sont rescorées, sauf avec `full`. |
 | `/zps-pareto:next [owner/repo \| all]` | Indique la seule issue à traiter maintenant, avec un plan court. |
+| `/zps-pareto:board [owner/repo \| all] [P0 \| P1 \| P2 \| quick-win]` | Tableau de bord en lecture seule : explique V, I, R, E, le score et les classes, puis liste les issues scorées par score avec leurs facteurs, le seuil P0 courant, les issues non notées et l'ordre conseillé. N'écrit rien. |
 
 ## Scoring
 

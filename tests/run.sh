@@ -44,6 +44,9 @@ check "labels: request keeps default" "pareto:request" "$(label_of request <<<"$
 actual=$("$JQ" -r "$(issues_jq_filter acme/app 'priority: high' priority:medium pareto:P2 pareto:quick-win)" "$FIX/issues.json" | tr -d '\r')
 check "issues filter: status, class, tag and score" "$(cat "$FIX/issues.expected")" "$actual"
 
+actual=$("$JQ" -r "$(issues_jq_filter acme/app 'priority: high' priority:medium pareto:P2 pareto:quick-win detail)" "$FIX/issues.json" | tr -d '')
+check "issues filter: detail adds V, I, R, E" "$(cat "$FIX/issues-factors.expected")" "$actual"
+
 if ((failures > 0)); then
   echo "$failures test(s) failed"
   exit 1
