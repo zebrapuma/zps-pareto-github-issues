@@ -2,7 +2,7 @@
 name: board
 description: Show the Pareto priority board, read-only. Explains V, I, R, E, the score, the classes and the quick-win tag, then lists every scored issue sorted by score with its factors, the current P0 threshold, the unscored issues and the suggested order of work. Use when the user wants to see, understand or share the ranking without changing anything.
 argument-hint: "[owner/repo | all] [P0 | P1 | P2 | quick-win]"
-allowed-tools: Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/list-issues.sh *) Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/pareto-context.sh *) Read Grep Glob
+allowed-tools: Bash(bash *) Bash(gh issue list *) Bash(gh issue view *) Read Grep Glob
 ---
 
 # Pareto board (read-only)
