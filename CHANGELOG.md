@@ -7,7 +7,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Fixed
 - `templates/CLAUDE.block.md` no longer tells Claude to use `Fixes #123`: issues are referenced with `Refs #123` and never closed before the acceptance criteria are verified (#9).
-- `/zps-pareto:setup` step 4 writes the CLAUDE.md block to `.claude/CLAUDE.md` when the repository is itself a plugin (`.claude-plugin/plugin.json` at the root), because a root `CLAUDE.md` makes `claude plugin validate --strict` fail (#9).
+- `/zps-pareto:setup` step 4 writes the CLAUDE.md block to `.claude/CLAUDE.md` when the repository is itself a plugin (`.claude-plugin/plugin.json` or `.claude-plugin/marketplace.json` at the root), because a root `CLAUDE.md` makes `claude plugin validate --strict` fail (#9).
 
 ## [1.0.0] - 2026-10-07
 
