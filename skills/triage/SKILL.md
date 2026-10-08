@@ -39,7 +39,7 @@ $ARGUMENTS
    - `V` value: business value. `I` impact: how directly it helps or blocks. `R` reach: how many people it touches. `E` effort.
    - `Score` = V x I x R / E.
    - `Class`: `P0` vital few, `P1`, `P2`.
-   - `Quick win`: score and effort thresholds from the rules (by default score >= 15 and effort <= 2).
+   - `Quick win`: the threshold is the Quick win line of the rules printed above.
    - `Change`: old class -> new class.
 
    Then the table, sorted by score, descending:
