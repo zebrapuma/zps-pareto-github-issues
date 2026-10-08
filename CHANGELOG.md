@@ -5,6 +5,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Added
+- `/zps-pareto:board`: read-only board with a legend (V, I, R, E, score, classes, quick win), the current P0 threshold, the scored issues sorted by score with their factors, the unscored issues counted apart and the suggested order. Optional `owner/repo | all` and `P0 | P1 | P2 | quick-win` arguments (#11).
+- `list-issues.sh --factors` adds the V, I, R, E columns read from the last score comment. The default output is unchanged (#11).
+
+### Changed
+- `/zps-pareto:triage` shows a legend before its table, with the scales taken from the repository's scoring rules (#11).
+
 ### Fixed
 - `templates/CLAUDE.block.md` no longer tells Claude to use `Fixes #123`: issues are referenced with `Refs #123` and never closed before the acceptance criteria are verified (#9).
 - `/zps-pareto:setup` step 4 writes the CLAUDE.md block to `.claude/CLAUDE.md` when the repository is itself a plugin (`.claude-plugin/plugin.json` or `.claude-plugin/marketplace.json` at the root), because a root `CLAUDE.md` makes `claude plugin validate --strict` fail (#9).

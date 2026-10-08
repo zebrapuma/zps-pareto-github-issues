@@ -1,0 +1,9 @@
+acme/app#1 | new | - | - | - | - | - | - | - | 2026-10-01 | never scored
+acme/app#2 | scored | P0 | - | 18.5 | 5 | 4 | 2 | 2 | 2026-10-01 | scored, untouched
+acme/app#3 | stale | P1 | - | 6 | - | - | - | - | 2026-10-05 | commented after score
+acme/app#4 | stale | P2 | - | - | - | - | - | - | 2026-10-01 | class label but no score comment
+acme/app#5 | scored | P1 | quick-win | 20 | 5 | 4 | 1 | 1 | 2026-10-03 | two scores, last wins, quick win
+acme/app#6 | new | - | - | - | - | - | - | - | 2026-10-01 | unmapped default label is ignored
+acme/app#7 | scored | P1 | - | 12.0 | 2.5 | 3 | 2 | 1.25 | 2026-10-01 | decimal factors and score 12.0
+acme/app#8 | scored | P1 | - | 10 | - | - | - | - | 2026-10-02 | latest score comment has no factors
+acme/app#9 | scored | P2 | - | 8 | - | - | - | - | 2026-10-01 | incomplete factors

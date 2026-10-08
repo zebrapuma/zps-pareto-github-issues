@@ -35,7 +35,14 @@ $ARGUMENTS
 4. **Compute the classes** over every scored issue listed above (the whole portfolio when one exists, even if only one repository was re-scored), so there is a single `P0` threshold. State that threshold.
    Each issue gets one class (`P0`, `P1`, `P2`) and the `quick-win` tag when its rule applies.
    An issue whose score did not change can still change class because the threshold moved: include it.
-5. **Show a table** sorted by score, descending:
+5. **Show a legend, then a table.** Before the table, a short legend for a reader who does not know the method, one line each, with the scales and thresholds taken from the scoring rules printed above (`.claude/pareto.md`, or the portfolio hub it names), never hard-coded here: a hub may have changed them.
+   - `V` value: business value. `I` impact: how directly it helps or blocks. `R` reach: how many people it touches. `E` effort.
+   - `Score` = V x I x R / E.
+   - `Class`: `P0` vital few, `P1`, `P2`.
+   - `Quick win`: the threshold is the Quick win line of the rules printed above.
+   - `Change`: old class -> new class.
+
+   Then the table, sorted by score, descending:
    `Repo#n | Title | V | I | R | E | Score | Class | Quick win | Change | One-line rationale`
    (`=` in V/I/R/E for a recorded score that was not re-scored; `Change` shows old -> new class.)
 6. Point out the ~20 % of issues that carry ~80 % of the value.

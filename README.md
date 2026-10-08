@@ -36,6 +36,7 @@ Or turn on auto-update for this marketplace once: `/plugin`, then **Marketplaces
 | `/zps-pareto:intake <request>` | Turns a pasted email, message or call notes into a scored GitHub issue. Detects duplicates, splits multi-need requests, picks the right repository in a portfolio. |
 | `/zps-pareto:triage [owner/repo \| all] [full]` | Scores open issues, highlights the ~20 % that carry ~80 % of the value, proposes today's order of work, updates labels after confirmation. Incremental: only new or changed issues are re-scored, unless you pass `full`. |
 | `/zps-pareto:next [owner/repo \| all]` | Tells you the one issue to work on right now, with a short plan. |
+| `/zps-pareto:board [owner/repo \| all] [P0 \| P1 \| P2 \| quick-win]` | Read-only board: explains V, I, R, E, the score and the classes, then lists the scored issues by score with their factors, the current P0 threshold, the unscored issues and the suggested order. Writes nothing. |
 
 ## Scoring
 

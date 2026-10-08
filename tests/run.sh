@@ -44,6 +44,42 @@ check "labels: request keeps default" "pareto:request" "$(label_of request <<<"$
 actual=$("$JQ" -r "$(issues_jq_filter acme/app 'priority: high' priority:medium pareto:P2 pareto:quick-win)" "$FIX/issues.json" | tr -d '\r')
 check "issues filter: status, class, tag and score" "$(cat "$FIX/issues.expected")" "$actual"
 
+actual=$("$JQ" -r "$(issues_jq_filter acme/app 'priority: high' priority:medium pareto:P2 pareto:quick-win detail)" "$FIX/issues.json" | tr -d '\r')
+check "issues filter: detail adds V, I, R, E" "$(cat "$FIX/issues-factors.expected")" "$actual"
+
+# End to end: list-issues.sh --factors against the fixture, with a stub gh that answers from
+# the fixture instead of GitHub. Behaviours pinned by the fixture: decimal factors and score
+# "12.0" are kept as written; when the most recent score comment carries no factors, the most
+# recent comment wins and the factors are empty ("-"), even if an older comment had them;
+# incomplete factors give "-" for all four.
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+mkdir "$tmp/bin" "$tmp/work" "$tmp/work/.claude"
+cat >"$tmp/bin/gh" <<'STUB'
+#!/usr/bin/env bash
+case "$1 $2" in
+  "repo view") echo acme/app ;;
+  "api graphql")
+    while (($# > 0)); do
+      if [[ $1 == --jq ]]; then "$JQ" -r "$2" "$FIXTURE"; exit 0; fi
+      shift
+    done
+    exit 1 ;;
+  *) exit 1 ;;
+esac
+STUB
+chmod +x "$tmp/bin/gh"
+printf '## Labels
+
+| Class | Label |
+|---|---|
+| P0 | priority: high |
+| P1 | priority:medium |
+' >"$tmp/work/.claude/pareto.md"
+root=$PWD
+actual=$(cd "$tmp/work" && PATH="$tmp/bin:$PATH" JQ="$JQ" FIXTURE="$root/$FIX/issues.json"   bash "$root/scripts/list-issues.sh" --factors | grep -v '^#' | tr -d '')
+check "list-issues.sh --factors end to end" "$(cat "$FIX/issues-factors.expected")" "$actual"
+
 if ((failures > 0)); then
   echo "$failures test(s) failed"
   exit 1

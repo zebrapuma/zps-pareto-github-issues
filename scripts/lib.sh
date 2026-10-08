@@ -66,7 +66,9 @@ label_of() {
 }
 
 # jq program turning the GraphQL issues page into list-issues.sh lines.
-# Arguments: repo, then the labels of P0, P1, P2 and quick-win in that repository.
+# Arguments: repo, then the labels of P0, P1, P2 and quick-win in that repository, then
+# optionally "detail" to add the V, I, R, E factors of the last score comment after the score
+# ("-" when the comment does not carry them).
 # A score comment is followed by nothing but GitHub's own bookkeeping: allow 2 minutes
 # between the comment and the issue's updatedAt before calling the issue stale.
 issues_jq_filter() {
@@ -80,7 +82,9 @@ def cls: if . == "$2" then "P0" elif . == "$3" then "P1" elif . == "$4" then "P2
    elif ((.updatedAt | fromdate) - (\$last.createdAt | fromdate)) > 120 then "stale"
    else "scored" end) as \$status
 | ((((\$last.body // "") | capture("^Pareto score: *(?<s>[0-9]+([.][0-9]+)?)") | .s)) // "-") as \$score
-| "$1#\(.number) | \(\$status) | \(\$class) | \(\$tag) | \(\$score) | \(.updatedAt[0:10]) | \(.title)"
+| ((((\$last.body // "") | capture("[(]V(?<v>[0-9]+([.][0-9]+)?) x I(?<i>[0-9]+([.][0-9]+)?) x R(?<r>[0-9]+([.][0-9]+)?) / E(?<e>[0-9]+([.][0-9]+)?)"))) // {}) as \$f
+| (if "${6:-}" == "detail" then " | \(\$f.v // "-") | \(\$f.i // "-") | \(\$f.r // "-") | \(\$f.e // "-")" else "" end) as \$extra
+| "$1#\(.number) | \(\$status) | \(\$class) | \(\$tag) | \(\$score)\(\$extra) | \(.updatedAt[0:10]) | \(.title)"
 EOF
 }
 
