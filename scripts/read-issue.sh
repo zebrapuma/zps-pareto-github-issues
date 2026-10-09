@@ -37,6 +37,7 @@ fi
 repo=${POS[0]}
 num=${POS[1]}
 
+goto_root
 load_context
 
 # The last note of this issue, if any, and the cursor it holds.
@@ -63,7 +64,7 @@ QUERY='query($owner: String!, $name: String!, $number: Int!) {
     issue(number: $number) {
       title body state updatedAt lastEditedAt
       labels(first: 30) { nodes { name } }
-      comments(last: 100) {
+      comments(last: __WINDOW__) {
         totalCount
         nodes { databaseId author { login } body createdAt lastEditedAt }
       }
@@ -74,7 +75,7 @@ QUERY='query($owner: String!, $name: String!, $number: Int!) {
 # flc is digits and fed an ISO date or "-" (checked by the regexes above): safe to inline.
 if [[ ! $fed =~ ^([-]|[0-9TZ:.-]+)$ ]]; then mode=full; fi
 JQ_PROGRAM=$(
-  printf 'def flc: %s; def fed: "%s"; def mode: "%s";\n' "$flc" "$fed" "$mode"
+  printf 'def flc: %s; def fed: "%s"; def mode: "%s"; def window: %s;\n' "$flc" "$fed" "$mode" "$COMMENTS_WINDOW"
   cat <<'EOF'
 .data.repository.issue as $i
 | if $i == null then "# error: issue not found or no access"
@@ -87,7 +88,7 @@ JQ_PROGRAM=$(
         | "--- comment " + ((.databaseId // 0) | tostring) + " by " + (.author.login // "ghost") + ", " + .createdAt + "\n" + (.body // "") ] as $cs
     | "# read: " + $m + (if $m == "full" and mode == "auto" then " (edited since the note)" else "" end)
       + "\n# issue: " + $i.title + " [" + $i.state + "] labels: " + ([$i.labels.nodes[].name] | join(", "))
-      + (if $i.comments.totalCount > 100 then "\n# warning: " + ($i.comments.totalCount | tostring) + " comments, only the last 100 are shown" else "" end)
+      + (if $i.comments.totalCount > window then "\n# warning: " + ($i.comments.totalCount | tostring) + " comments, only the last " + (window | tostring) + " are shown" else "" end)
       + (if $m == "full" then "\n\n" + ($i.body // "") else "" end)
       + "\n\n" + (if ($cs | length) == 0 then "(no new comment: only the title, labels or state may have changed)" else ($cs | join("\n\n")) end)
       + "\n\n# cursor: " + ($lc | tostring) + "@" + $ed + "@" + $i.updatedAt
@@ -96,8 +97,10 @@ EOF
 )
 
 if ! out=$(gh api graphql -f owner="${repo%%/*}" -f name="${repo#*/}" -F number="$num" \
-  -f query="$QUERY" --jq "$JQ_PROGRAM" 2>&1); then
-  echo "# error: cannot read $repo#$num (repository missing or no access)"
+  -f query="${QUERY//__WINDOW__/$COMMENTS_WINDOW}" --jq "$JQ_PROGRAM" 2>&1); then
+  # The reason is the first line of gh's answer (authentication, quota, network, refused query),
+  # on stderr so that it does not end up among the data.
+  echo "# error: cannot read $repo#$num: $(head -n 1 <<<"$out" | tr -d '\r' | cut -c1-300)" >&2
   exit 1
 fi
 out=$(tr -d '\r' <<<"$out")

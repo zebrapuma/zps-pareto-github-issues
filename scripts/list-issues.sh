@@ -46,6 +46,7 @@ while (($# > 0)); do
   esac
 done
 
+goto_root
 load_context
 if ((${#REPOS[@]} == 0)); then
   if [[ -n $PORTFOLIO ]]; then
@@ -68,7 +69,7 @@ QUERY='query($owner: String!, $name: String!, $endCursor: String) {
       nodes {
         number title updatedAt lastEditedAt
         labels(first: 30) { nodes { name } }
-        comments(last: 20) { nodes { databaseId body createdAt lastEditedAt } }
+        comments(last: __WINDOW__) { nodes { databaseId body createdAt lastEditedAt } }
       }
     }
   }
@@ -99,10 +100,10 @@ for repo in "${REPOS[@]}"; do
     echo "$repo | error: a label name in its ## Labels table contains a quote or a backslash"
     continue
   fi
-  if [[ -n $USE_NOTES ]]; then notes_for "$repo" >"$notes_file"; else : >"$notes_file"; fi
+  if [[ -n $USE_NOTES ]]; then notes_for "$repo" 2>&1 >"$notes_file"; else : >"$notes_file"; fi
   # Captured first: on a GraphQL error gh still prints the raw response on stdout.
   if out=$(gh api graphql --paginate \
-    -f owner="${repo%%/*}" -f name="${repo#*/}" -f query="$QUERY" \
+    -f owner="${repo%%/*}" -f name="${repo#*/}" -f query="${QUERY//__WINDOW__/$COMMENTS_WINDOW}" \
     --jq "$(issues_jq_filter "$repo" "$p0" "$p1" "$p2" "$qw" "$DETAIL" cursor)" 2>/dev/null); then
     [[ -z $out ]] || apply_notes "$notes_file" "$DETAIL" "$WHAT" <<<"$out" | only_classes
   else

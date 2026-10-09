@@ -9,6 +9,19 @@ RULES_FILE=".claude/pareto.md"
 # standalone repository), one file per scored repository: .claude/pareto-notes/<owner>-<repo>.jsonl
 NOTES_DIR=".claude/pareto-notes"
 REPO_RE='[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+'
+# How many comments of an issue are fetched. One value for list-issues.sh and read-issue.sh: the
+# cursor kept in a reading note (last comment, last edit) is computed on this window by the
+# second and compared with the one computed by the first, so the two must see the same comments.
+COMMENTS_WINDOW=100
+
+# Moves to the root of the git repository containing the current directory (nothing to do outside
+# a git repository). The rules file and the reading notes are looked up relative to the root, so
+# a script run from a sub-folder behaves as if run from the root. Call it before load_context.
+goto_root() {
+  local top
+  top=$(git rev-parse --show-toplevel 2>/dev/null) || return 0
+  [[ -z $top ]] || cd "$top"
+}
 
 # Default GitHub label of each class, overridden by a "## Labels" table in .claude/pareto.md.
 DEFAULT_LABELS="P0=pareto:P0
@@ -135,12 +148,19 @@ notes_path() {
 # clone has it (hub or standalone repository), otherwise the hub's file through the API.
 # Requires load_context.
 notes_for() {
-  local f
+  local f out err
   f=$(notes_path "$1")
   if [[ -f $f ]]; then
     tr -d '\r' <"$f"
   elif [[ -n $HUB && $HUB != "$HERE" ]]; then
-    { gh api "repos/$HUB/contents/$f" -H "Accept: application/vnd.github.raw" 2>/dev/null || true; } | tr -d '\r'
+    err=$(mktemp)
+    if out=$(gh api "repos/$HUB/contents/$f" -H "Accept: application/vnd.github.raw" 2>"$err"); then
+      tr -d '\r' <<<"$out"
+    elif ! grep -qE 'HTTP 404|Not Found' "$err"; then
+      # Not "no notes yet" (a 404): authentication, quota or network. Say it, on stderr.
+      echo "# warning: reading notes unreadable ($(head -n 1 "$err" | tr -d '\r' | cut -c1-200)), every changed issue will be read in full" >&2
+    fi
+    rm -f "$err"
   fi
 }
 
@@ -157,13 +177,16 @@ notes_for() {
 # only a new comment, an edit, or another change after the note makes the issue stale.
 apply_notes() {
   awk -v notes="$1" -v detail="${2:-}" -v what="${3:-}" '
+    # Identifiers are compared as digit strings (no leading zero): comment ids go past 2^31 and
+    # some awks print large numbers in exponent form.
+    function gt(a, b) { return length(a) > length(b) || (length(a) == length(b) && (a "") > (b "")) }
     BEGIN {
       FS = " [|] "; OFS = " | "
       while ((getline line < notes) > 0) {
         if (!match(line, /"n":[0-9]+/)) continue
-        n = substr(line, RSTART + 4, RLENGTH - 4) + 0
-        lc[n] = 0; ed[n] = ""; up[n] = ""; wh[n] = "-"
-        if (match(line, /"lastComment":[0-9]+/)) lc[n] = substr(line, RSTART + 14, RLENGTH - 14) + 0
+        n = substr(line, RSTART + 4, RLENGTH - 4)
+        lc[n] = "0"; ed[n] = ""; up[n] = ""; wh[n] = "-"
+        if (match(line, /"lastComment":[0-9]+/)) lc[n] = substr(line, RSTART + 14, RLENGTH - 14)
         if (match(line, /"edited":"[^"]*"/)) ed[n] = substr(line, RSTART + 10, RLENGTH - 11)
         if (match(line, /"updatedAt":"[^"]*"/)) up[n] = substr(line, RSTART + 13, RLENGTH - 14)
         if (match(line, /"what":"[^"]*"/)) wh[n] = substr(line, RSTART + 8, RLENGTH - 9)
@@ -173,14 +196,14 @@ apply_notes() {
     }
     {
       sub(/\r$/, "")
-      num = $1; sub(/^[^#]*#/, "", num); num += 0
+      num = $1; sub(/^[^#]*#/, "", num)
       st = $2; rd = "none"
       split($3, cu, "@")
       if (st == "new") {
         rd = "full"
       } else if (num in lc) {
         if (cu[2] != ed[num]) { st = "stale"; rd = "full" }
-        else if (cu[1] + 0 > lc[num]) { st = "stale"; rd = "partial" }
+        else if (gt(cu[1], lc[num])) { st = "stale"; rd = "partial" }
         else if (st == "stale" && cu[3] != up[num]) { rd = "partial" }
         else { st = "scored" }
       } else if (st == "stale") {

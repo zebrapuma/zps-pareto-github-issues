@@ -13,7 +13,8 @@
 #   summary  3 short lines in one line, separated by " / " (it may contain " | ")
 #   A note replaces the previous note of the same issue. Lines that cannot be recorded are
 #   reported on stderr and the exit status is 1.
-#   Run it from the hub: from a member repository nothing is written, the note lines to
+#   Run it from the hub (any folder of it: the scripts move to the git root first): from a member
+#   repository, whatever the folder, nothing is written, the note lines to
 #   commit in the hub are printed instead (exit status 2).
 set -euo pipefail
 # shellcheck source-path=SCRIPTDIR source=lib.sh
@@ -31,6 +32,7 @@ if ! [[ $DATE =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
   exit 1
 fi
 
+goto_root
 load_context
 
 # stdin to JSON note lines, one "owner/repo<TAB>json" per valid input line, errors on stderr.
@@ -48,6 +50,10 @@ to_json() {
       return o
     }
     function trim(s) { gsub(/^ +| +$/, "", s); return s }
+    # A JSON number: no leading zero. Identifiers and numbers are printed as the validated text,
+    # never through a numeric conversion: comment ids go past 2^31 and some awks (mawk) print
+    # large numbers in exponent form.
+    BEGIN { NUM = "^(0|[1-9][0-9]*)([.][0-9]+)?$" }
     /^[ ]*$/ { next }
     {
       if (NF < 9) { print "cannot record (need 9 fields): " $0 > "/dev/stderr"; bad = 1; next }
@@ -57,9 +63,9 @@ to_json() {
       summary = $9
       for (k = 10; k <= NF; k++) summary = summary " | " $k
       summary = trim(summary)
-      if (ref !~ /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+#[0-9]+$/) { print "cannot record (bad issue reference): " $0 > "/dev/stderr"; bad = 1; next }
-      if (cursor !~ /^[0-9]+@[^@ ]+@[^@ ]+$/) { print "cannot record (bad cursor): " $0 > "/dev/stderr"; bad = 1; next }
-      if (v !~ /^[0-9]+([.][0-9]+)?$/ || i2 !~ /^[0-9]+([.][0-9]+)?$/ || r !~ /^[0-9]+([.][0-9]+)?$/ || e !~ /^[0-9]+([.][0-9]+)?$/ || score !~ /^[0-9]+([.][0-9]+)?$/) {
+      if (ref !~ /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+#[1-9][0-9]*$/) { print "cannot record (bad issue reference): " $0 > "/dev/stderr"; bad = 1; next }
+      if (cursor !~ /^(0|[1-9][0-9]*)@[^@ ]+@[^@ ]+$/) { print "cannot record (bad cursor): " $0 > "/dev/stderr"; bad = 1; next }
+      if (v !~ NUM || i2 !~ NUM || r !~ NUM || e !~ NUM || score !~ NUM) {
         print "cannot record (V, I, R, E and score must be numbers): " $0 > "/dev/stderr"; bad = 1; next
       }
       if (what == "" || summary == "") { print "cannot record (empty what or summary): " $0 > "/dev/stderr"; bad = 1; next }
@@ -69,7 +75,7 @@ to_json() {
       repo = ref; sub(/#.*/, "", repo)
       num = ref; sub(/^[^#]*#/, "", num)
       printf "%s\t{\"n\":%s,\"lastComment\":%s,\"edited\":\"%s\",\"updatedAt\":\"%s\",\"v\":%s,\"i\":%s,\"r\":%s,\"e\":%s,\"score\":%s,\"date\":\"%s\",\"what\":\"%s\",\"summary\":\"%s\"}\n", \
-        repo, num + 0, cu[1] + 0, esc(cu[2]), esc(cu[3]), v, i2, r, e, score, date, esc(what), esc(summary)
+        repo, num, cu[1], esc(cu[2]), esc(cu[3]), v, i2, r, e, score, date, esc(what), esc(summary)
     }
     END { if (bad) exit 3 }'
 }

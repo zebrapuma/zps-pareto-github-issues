@@ -38,7 +38,7 @@ $ARGUMENTS
 2. **Score** each issue to re-score. Read it with `bash "${CLAUDE_PLUGIN_ROOT}/scripts/read-issue.sh" [--full] <owner/repo> <n>` (add `--full` with `reread`), never with `gh issue view`: the script prints only what is new.
    - `# read: full`: the body and every comment. Read it all.
    - `# read: partial`: the reading note (`# note:`, with the factors, the summary and the "What it is" of the last score) and the comments written after it. Do not read the issue again beyond that: take the note as what was understood, and change a factor only for what the new comments change.
-   - The script ends with `# cursor: <id>@<edit>@<updatedAt>`: keep it, unchanged, for step 9. It marks what you read, so a comment that arrives while you work is read next time.
+   - The script ends with `# cursor: <id>@<edit>@<updatedAt>`: keep it, unchanged, for step 10. It marks what you read, so a comment that arrives while you work is read next time.
    - When the code is available locally, read the relevant code to estimate effort (full reads, or when the new comments change the effort).
    Never invent a value: if business value cannot be inferred, write `?` and list the question to ask.
    For each issue also write its **What it is**: 4 to 8 words, plain language, the business problem as the person who lives it would say it. No issue number, no code name, no jargon, not the title copied. And a **summary** in 3 short lines (what, why it matters, what is decided or open), for the note.

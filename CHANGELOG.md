@@ -14,6 +14,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `list-issues.sh --factors` adds the V, I, R, E columns read from the last score comment. The default output is unchanged (#11).
 
 ### Changed
+- Every script moves to the git root before reading `.claude/pareto.md`, so `record-note.sh` run from a sub-folder of a member repository still refuses to write (#14).
+- `list-issues.sh` and `read-issue.sh` read the same comment window (`COMMENTS_WINDOW` in `scripts/lib.sh`, 100), so the cursor of a note and the cursor of the listing agree on long threads (#14).
+- Comment ids past 2^31 are written and compared as digit strings, never through a numeric conversion; leading zeros are rejected in identifiers, cursors and factors (#14).
+- A member repository that cannot read the hub's notes through the API says why (`# warning: reading notes unreadable (...)`) unless it is a plain 404 (#14).
+- `read-issue.sh` reports the first line of gh's answer when it fails, on stderr (#14).
 - `list-issues.sh` output has a new `read` column after the status (`full`, `partial` or `none`). With a reading note, what triage did itself (class labels, the `Pareto score:` comment) no longer makes an issue `stale`; a new comment, an edit or another change after the note does (#14).
 - `/zps-pareto:triage` shows a legend before its table, with the scales taken from the repository's scoring rules (#11).
 
