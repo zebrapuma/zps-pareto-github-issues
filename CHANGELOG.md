@@ -5,6 +5,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-09
+
 ### Added
 - Reading notes: at each score, `/zps-pareto:triage` keeps a note per issue in the hub (`.claude/pareto-notes/<owner>-<repo>.jsonl`): 3-line summary, "What it is", V, I, R, E, date, last comment read, last edit read, `updatedAt` read. A stale issue is read again from its note and the comments written after the note's last one (`scripts/read-issue.sh`); notes are written by `scripts/record-note.sh` after confirmation, from the hub only (#14).
 - `triage` says how many issues were read in full, in part, or not at all; `triage reread` ignores the notes (#14).
@@ -37,4 +39,5 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - Three priority classes (`P0`, `P1`, `P2`) plus a `quick-win` tag, with namespaced default labels (`pareto:P0`, ...). A `## Labels` table maps them to a repository's existing priority labels instead of duplicating them.
 - Scripts `pareto-context.sh`, `list-issues.sh` (one GraphQL call per 100 issues) and `setup-labels.sh`.
 
+[1.1.0]: https://github.com/zebrapuma/zps-pareto-github-issues/releases/tag/zps-pareto--v1.1.0
 [1.0.0]: https://github.com/zebrapuma/zps-pareto-github-issues/releases/tag/zps-pareto--v1.0.0

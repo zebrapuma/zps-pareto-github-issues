@@ -1,7 +1,7 @@
 {
   "name": "zps-pareto",
   "displayName": "ZPS Pareto - GitHub Issues Triage",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Pareto-driven request management for GitHub: intake requests as issues, score them (Value × Impact × Reach / Effort), triage one repository or a whole portfolio, and work on the vital few first.",
   "author": {
     "name": "Régis Scyeur (ZebraPuma Services)",
