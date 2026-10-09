@@ -1,0 +1,12 @@
+acme/app#10 | scored | 0@-@2026-10-01T10:00:30Z | P1 | - | 6 | 2026-10-01 | note, untouched since
+acme/app#11 | stale | 102@-@2026-10-05T09:00:00Z | P1 | - | 6 | 2026-10-05 | note, new comment
+acme/app#12 | stale | 0@2026-10-04T08:00:00Z@2026-10-04T08:00:00Z | P1 | - | 6 | 2026-10-04 | note, body edited
+acme/app#13 | stale | 0@-@2026-10-06T10:00:00Z | P1 | - | 6 | 2026-10-06 | note, label changed by someone
+acme/app#14 | scored | 100@-@2026-10-01T10:00:20Z | P1 | - | 6 | 2026-10-01 | note, comment read before the score
+acme/app#15 | stale | 205@-@2026-10-06T10:00:00Z | P1 | - | 6 | 2026-10-06 | note, reread without a new score
+acme/app#16 | stale | 102@-@2026-10-05T09:00:00Z | P1 | - | 6 | 2026-10-05 | no note, new comment
+acme/app#17 | scored | 0@-@2026-10-01T10:00:30Z | P1 | - | 6 | 2026-10-01 | no note, untouched
+acme/app#18 | stale | 100@2026-10-07T10:00:00Z@2026-10-07T10:00:00Z | P1 | - | 6 | 2026-10-07 | note, comment edited
+acme/app#19 | new | 100@-@2026-10-01T10:00:00Z | - | - | - | 2026-10-01 | note but no score comment
+acme/app#20 | scored | 102@-@2026-10-01T10:01:00Z | P1 | - | 6 | 2026-10-01 | note, comment right after the score
+acme/app#21 | scored | 0@2026-10-04T08:00:00Z@2026-10-04T08:00:30Z | P1 | - | 6 | 2026-10-04 | note, edit already read

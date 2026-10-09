@@ -1,0 +1,8 @@
+# read: partial
+# note: {"n":11,"lastComment":100,"edited":"-","updatedAt":"2026-10-01T09:59:00Z","v":3,"i":2,"r":2,"e":2,"score":6,"date":"2026-10-01","what":"Supplier prices published too low","summary":"Tricky: text with \"lastComment\":999 and \"what\":\"fake\" inside."}
+# issue: Supplier prices published too low [OPEN] labels: priority:medium, bug
+
+--- comment 102 by alice, 2026-10-05T09:00:00Z
+Now 60 rows, new supplier.
+
+# cursor: 102@-@2026-10-05T09:00:00Z

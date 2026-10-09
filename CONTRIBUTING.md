@@ -28,7 +28,7 @@ Any change must keep these guarantees:
 - **Claude never invents business value**: missing information leads to a question.
 - **Nothing changes without confirmation**: issues, labels, files and commits are shown first.
 - **Setup is non-destructive and idempotent**: existing content and labels are never overwritten silently.
-- **Scripts are read-only** except `setup-labels.sh`, which only creates missing labels.
+- **Scripts are read-only** except `setup-labels.sh`, which only creates missing labels, and `record-note.sh`, which only writes the reading notes (`.claude/pareto-notes/`) of the hub, after the triage was confirmed.
 - Scripts run on bash 3.2+ (macOS) and Git Bash (Windows).
 
 ## Style

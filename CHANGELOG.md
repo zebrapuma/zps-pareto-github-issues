@@ -6,10 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ## [Unreleased]
 
 ### Added
+- Reading notes: at each score, `/zps-pareto:triage` keeps a note per issue in the hub (`.claude/pareto-notes/<owner>-<repo>.jsonl`): 3-line summary, "What it is", V, I, R, E, date, last comment read, last edit read, `updatedAt` read. A stale issue is read again from its note and the comments written after the note's last one (`scripts/read-issue.sh`); notes are written by `scripts/record-note.sh` after confirmation, from the hub only (#14).
+- `triage` says how many issues were read in full, in part, or not at all; `triage reread` ignores the notes (#14).
+- A "What it is" column (4 to 8 plain words on the business problem) before the numbers in the table of `triage`, and a short candidates table in `next` (#14).
+- `list-issues.sh --what` adds the "What it is" of the note; `--no-notes` ignores the notes (#14).
 - `/zps-pareto:board`: read-only board with a legend (V, I, R, E, score, classes, quick win), the current P0 threshold, the scored issues sorted by score with their factors, the unscored issues counted apart and the suggested order. Optional `owner/repo | all` and `P0 | P1 | P2 | quick-win` arguments (#11).
 - `list-issues.sh --factors` adds the V, I, R, E columns read from the last score comment. The default output is unchanged (#11).
 
 ### Changed
+- `list-issues.sh` output has a new `read` column after the status (`full`, `partial` or `none`). With a reading note, what triage did itself (class labels, the `Pareto score:` comment) no longer makes an issue `stale`; a new comment, an edit or another change after the note does (#14).
 - `/zps-pareto:triage` shows a legend before its table, with the scales taken from the repository's scoring rules (#11).
 
 ### Fixed

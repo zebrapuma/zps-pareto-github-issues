@@ -34,7 +34,7 @@ Ou active une fois la mise à jour automatique de cette marketplace : `/plugin`,
 |---|---|
 | `/zps-pareto:setup` | Configure un repo une fois (autonome, hub de portefeuille ou membre) : règles de scoring, bloc CLAUDE.md, modèle d'issue, labels GitHub, Task Master en option. |
 | `/zps-pareto:intake <demande>` | Transforme un mail, un message ou des notes d'appel en issue GitHub scorée. Détecte les doublons, découpe les demandes multiples, choisit le bon repo dans un portefeuille. |
-| `/zps-pareto:triage [owner/repo \| all] [full]` | Score les issues ouvertes, isole les ~20 % qui portent ~80 % de la valeur, propose l'ordre du jour, met à jour les labels après confirmation. Incrémental : seules les issues nouvelles ou modifiées sont rescorées, sauf avec `full`. |
+| `/zps-pareto:triage [owner/repo \| all] [full]` | Score les issues ouvertes, isole les ~20 % qui portent ~80 % de la valeur, propose l'ordre du jour, met à jour les labels après confirmation. Incrémental : seules les issues nouvelles ou modifiées sont rescorées, sauf avec `full`, et une issue modifiée est relue à partir de sa fiche de lecture et de ses seuls nouveaux commentaires. Le tableau commence par une colonne « What it is » en mots simples et dit combien d'issues ont été relues en entier, en partie ou pas du tout. |
 | `/zps-pareto:next [owner/repo \| all]` | Indique la seule issue à traiter maintenant, avec un plan court. |
 | `/zps-pareto:board [owner/repo \| all] [P0 \| P1 \| P2 \| quick-win]` | Tableau de bord en lecture seule : explique V, I, R, E, le score et les classes, puis liste les issues scorées par score avec leurs facteurs, le seuil P0 courant, les issues non notées et l'ordre conseillé. N'écrit rien. |
 
@@ -56,6 +56,16 @@ Ici, P0 signifie « le plus de valeur », pas « la prod est en panne » : les i
 **Tu as déjà des labels de priorité ?** Déclare-les dans la table `## Labels` de `.claude/pareto.md` (par exemple P0 = `priority:high`) au lieu d'en créer de nouveaux. `/zps-pareto:setup` le propose quand il trouve un schéma existant.
 
 Les règles vivent dans `.claude/pareto.md` et se modifient librement : définis ce que « forte valeur » veut dire pour ton activité, et le scoring devient fiable. Chaque score est consigné en commentaire d'issue (`Pareto score: 18 -> P0 (...)`) : c'est ainsi que le triage suivant sait ce qui a changé.
+
+### Fiches de lecture
+
+Un score dit ce que vaut une issue, pas ce qui a été compris. À chaque score, le triage garde aussi une **fiche de lecture** par issue dans le hub, dans `.claude/pareto-notes/<owner>-<repo>.jsonl` (une ligne JSON par issue) : un résumé en 3 lignes, un « What it is » de 4 à 8 mots, V, I, R, E, la date et ce qui a été lu (dernier commentaire, dernière modification, `updatedAt`). Le triage suivant :
+
+- relit une issue modifiée à partir de sa fiche et des commentaires postérieurs au dernier lu, pas depuis zéro (`read: partial`) ; une issue modifiée dans son texte, ou sans fiche, est relue en entier (`read: full`) ;
+- ne juge pas une issue modifiée à cause de ce que le triage a fait lui-même (étiquettes de classe, commentaire `Pareto score:`) ;
+- dit combien d'issues il a relues en entier, en partie ou pas du tout.
+
+La fiche est un fichier ordinaire du hub : relis-le, versionne-le. `triage reread` ignore les fiches.
 
 ## Mode portefeuille
 

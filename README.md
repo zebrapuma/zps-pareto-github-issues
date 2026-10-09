@@ -34,8 +34,8 @@ Or turn on auto-update for this marketplace once: `/plugin`, then **Marketplaces
 |---|---|
 | `/zps-pareto:setup` | One-time setup of a repository (standalone, portfolio hub or portfolio member): scoring rules, CLAUDE.md block, issue template, GitHub labels, optional Task Master. |
 | `/zps-pareto:intake <request>` | Turns a pasted email, message or call notes into a scored GitHub issue. Detects duplicates, splits multi-need requests, picks the right repository in a portfolio. |
-| `/zps-pareto:triage [owner/repo \| all] [full]` | Scores open issues, highlights the ~20 % that carry ~80 % of the value, proposes today's order of work, updates labels after confirmation. Incremental: only new or changed issues are re-scored, unless you pass `full`. |
-| `/zps-pareto:next [owner/repo \| all]` | Tells you the one issue to work on right now, with a short plan. |
+| `/zps-pareto:triage [owner/repo \| all] [full]` | Scores open issues, highlights the ~20 % that carry ~80 % of the value, proposes today's order of work, updates labels after confirmation. Incremental: only new or changed issues are re-scored, unless you pass `full`, and a changed issue is read again from its reading note and its new comments only. The table starts with a plain-words "What it is" column and says how many issues were read in full, in part, or not at all. |
+| `/zps-pareto:next [owner/repo \| all]` | Tells you the one issue to work on right now, with a short plan and a table of the next candidates in plain words ("What it is"). |
 | `/zps-pareto:board [owner/repo \| all] [P0 \| P1 \| P2 \| quick-win]` | Read-only board: explains V, I, R, E, the score and the classes, then lists the scored issues by score with their factors, the current P0 threshold, the unscored issues and the suggested order. Writes nothing. |
 
 ## Scoring
@@ -67,6 +67,16 @@ P0 here means "most valuable", not "production is down": incidents keep followin
 **Already have priority labels?** Map them in the `## Labels` table of `.claude/pareto.md` (for example P0 = `priority:high`) instead of creating new ones. `/zps-pareto:setup` offers it when it finds an existing scheme.
 
 Rules live in `.claude/pareto.md` and are yours to edit: define what "high value" means for your business and the scoring becomes reliable. Each score is recorded as an issue comment (`Pareto score: 18 -> P0 (...)`), which is how the next triage knows what has changed.
+
+### Reading notes
+
+A score says how much an issue is worth, not what was understood. At each score, triage also keeps a **reading note** per issue in the hub, in `.claude/pareto-notes/<owner>-<repo>.jsonl` (one JSON line per issue): a 3-line summary, a 4 to 8 word "What it is", V, I, R, E, the date, and what was read (last comment, last edit, `updatedAt`). The next triage then:
+
+- reads a changed issue from its note and the comments written after the note's last one, not from scratch (`read: partial`); an issue edited since, or never noted, is read in full (`read: full`);
+- does not call an issue changed because of what triage itself did (class labels, the `Pareto score:` comment);
+- says how many issues it read in full, in part, or not at all.
+
+The note is a normal file of the hub: review it, commit it. `triage reread` ignores the notes.
 
 ## Portfolio mode
 
