@@ -100,7 +100,7 @@ for repo in "${REPOS[@]}"; do
     echo "$repo | error: a label name in its ## Labels table contains a quote or a backslash"
     continue
   fi
-  if [[ -n $USE_NOTES ]]; then notes_for "$repo" 2>&1 >"$notes_file"; else : >"$notes_file"; fi
+  if [[ -n $USE_NOTES ]]; then { notes_for "$repo" >"$notes_file"; } 2>&1; else : >"$notes_file"; fi
   # Captured first: on a GraphQL error gh still prints the raw response on stdout.
   if out=$(gh api graphql --paginate \
     -f owner="${repo%%/*}" -f name="${repo#*/}" -f query="${QUERY//__WINDOW__/$COMMENTS_WINDOW}" \

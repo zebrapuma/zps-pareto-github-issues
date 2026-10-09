@@ -20,7 +20,7 @@ COMMENTS_WINDOW=100
 goto_root() {
   local top
   top=$(git rev-parse --show-toplevel 2>/dev/null) || return 0
-  [[ -z $top ]] || cd "$top"
+  [[ -z $top ]] || cd "$top" || return 1
 }
 
 # Default GitHub label of each class, overridden by a "## Labels" table in .claude/pareto.md.
