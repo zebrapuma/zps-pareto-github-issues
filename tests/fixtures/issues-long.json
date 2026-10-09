@@ -1,0 +1,152 @@
+{
+  "data": {
+    "repository": {
+      "issues": {
+        "nodes": [
+          {
+            "number": 30,
+            "title": "long thread, 25 comments",
+            "updatedAt": "2026-10-06T10:00:30Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "priority:medium"
+                }
+              ]
+            },
+            "comments": {
+              "nodes": [
+                {
+                  "databaseId": 4500000001,
+                  "body": "Comment 1.",
+                  "createdAt": "2026-10-02T08:10:00Z"
+                },
+                {
+                  "databaseId": 4500000002,
+                  "body": "Comment 2.",
+                  "createdAt": "2026-10-02T08:20:00Z"
+                },
+                {
+                  "databaseId": 4500000003,
+                  "body": "Comment 3.",
+                  "createdAt": "2026-10-02T08:30:00Z",
+                  "lastEditedAt": "2026-10-03T08:00:00Z"
+                },
+                {
+                  "databaseId": 4500000004,
+                  "body": "Comment 4.",
+                  "createdAt": "2026-10-02T09:00:00Z"
+                },
+                {
+                  "databaseId": 4500000005,
+                  "body": "Comment 5.",
+                  "createdAt": "2026-10-02T09:10:00Z"
+                },
+                {
+                  "databaseId": 4500000006,
+                  "body": "Comment 6.",
+                  "createdAt": "2026-10-02T09:20:00Z"
+                },
+                {
+                  "databaseId": 4500000007,
+                  "body": "Comment 7.",
+                  "createdAt": "2026-10-02T09:30:00Z"
+                },
+                {
+                  "databaseId": 4500000008,
+                  "body": "Comment 8.",
+                  "createdAt": "2026-10-02T10:00:00Z"
+                },
+                {
+                  "databaseId": 4500000009,
+                  "body": "Comment 9.",
+                  "createdAt": "2026-10-02T10:10:00Z"
+                },
+                {
+                  "databaseId": 4500000010,
+                  "body": "Comment 10.",
+                  "createdAt": "2026-10-02T10:20:00Z"
+                },
+                {
+                  "databaseId": 4500000011,
+                  "body": "Comment 11.",
+                  "createdAt": "2026-10-02T10:30:00Z"
+                },
+                {
+                  "databaseId": 4500000012,
+                  "body": "Comment 12.",
+                  "createdAt": "2026-10-02T11:00:00Z"
+                },
+                {
+                  "databaseId": 4500000013,
+                  "body": "Comment 13.",
+                  "createdAt": "2026-10-02T11:10:00Z"
+                },
+                {
+                  "databaseId": 4500000014,
+                  "body": "Comment 14.",
+                  "createdAt": "2026-10-02T11:20:00Z"
+                },
+                {
+                  "databaseId": 4500000015,
+                  "body": "Comment 15.",
+                  "createdAt": "2026-10-02T11:30:00Z"
+                },
+                {
+                  "databaseId": 4500000016,
+                  "body": "Comment 16.",
+                  "createdAt": "2026-10-02T12:00:00Z"
+                },
+                {
+                  "databaseId": 4500000017,
+                  "body": "Comment 17.",
+                  "createdAt": "2026-10-02T12:10:00Z"
+                },
+                {
+                  "databaseId": 4500000018,
+                  "body": "Comment 18.",
+                  "createdAt": "2026-10-02T12:20:00Z"
+                },
+                {
+                  "databaseId": 4500000019,
+                  "body": "Comment 19.",
+                  "createdAt": "2026-10-02T12:30:00Z"
+                },
+                {
+                  "databaseId": 4500000020,
+                  "body": "Comment 20.",
+                  "createdAt": "2026-10-02T13:00:00Z"
+                },
+                {
+                  "databaseId": 4500000021,
+                  "body": "Comment 21.",
+                  "createdAt": "2026-10-02T13:10:00Z"
+                },
+                {
+                  "databaseId": 4500000022,
+                  "body": "Comment 22.",
+                  "createdAt": "2026-10-02T13:20:00Z"
+                },
+                {
+                  "databaseId": 4500000023,
+                  "body": "Comment 23.",
+                  "createdAt": "2026-10-02T13:30:00Z"
+                },
+                {
+                  "databaseId": 4500000024,
+                  "body": "Comment 24.",
+                  "createdAt": "2026-10-02T14:00:00Z"
+                },
+                {
+                  "databaseId": 4500000025,
+                  "body": "Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-02). long thread",
+                  "createdAt": "2026-10-06T10:00:00Z"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

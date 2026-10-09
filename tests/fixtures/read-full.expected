@@ -1,0 +1,15 @@
+# read: full
+# issue: Supplier prices published too low [OPEN] labels: priority:medium, bug
+
+Prices are below cost since the import of 2026-09-28.
+
+--- comment 100 by bob, 2026-09-30T08:00:00Z
+First look: 40 rows.
+
+--- comment 101 by regis, 2026-10-01T10:00:00Z
+Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-01). Old score.
+
+--- comment 102 by alice, 2026-10-05T09:00:00Z
+Now 60 rows, new supplier.
+
+# cursor: 102@-@2026-10-05T09:00:00Z

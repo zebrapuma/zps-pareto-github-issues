@@ -17,7 +17,7 @@ Reply in the user's language. This skill never writes: no label, no comment, no 
 
 !`bash "${CLAUDE_PLUGIN_ROOT}/scripts/list-issues.sh" --factors 2>&1 || echo "(GitHub CLI unavailable: run 'gh auth login' in a GitHub repository)"`
 
-Line format: `owner/repo#n | status | class | tag | score | V | I | R | E | updated | title`. A factor is `-` when the last score comment does not carry it (an old or hand-written comment).
+Line format: `owner/repo#n | status | read | class | tag | score | V | I | R | E | updated | title`. `read` (`full`, `partial`, `none`) says how much of the issue triage would have to read again: the board ignores it. A factor is `-` when the last score comment does not carry it (an old or hand-written comment).
 
 ## Arguments
 

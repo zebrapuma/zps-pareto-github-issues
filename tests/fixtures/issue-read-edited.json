@@ -1,0 +1,52 @@
+{
+  "data": {
+    "repository": {
+      "issue": {
+        "title": "Supplier prices published too low",
+        "body": "Prices are below cost since the import of 2026-09-28.",
+        "state": "OPEN",
+        "updatedAt": "2026-10-05T09:00:00Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "priority:medium"
+            },
+            {
+              "name": "bug"
+            }
+          ]
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "databaseId": 100,
+              "author": {
+                "login": "bob"
+              },
+              "body": "First look: 40 rows.",
+              "createdAt": "2026-09-30T08:00:00Z"
+            },
+            {
+              "databaseId": 101,
+              "author": {
+                "login": "regis"
+              },
+              "body": "Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-01). Old score.",
+              "createdAt": "2026-10-01T10:00:00Z"
+            },
+            {
+              "databaseId": 102,
+              "author": {
+                "login": "alice"
+              },
+              "body": "Now 60 rows, new supplier.",
+              "createdAt": "2026-10-05T09:00:00Z"
+            }
+          ]
+        },
+        "lastEditedAt": "2026-10-04T12:00:00Z"
+      }
+    }
+  }
+}

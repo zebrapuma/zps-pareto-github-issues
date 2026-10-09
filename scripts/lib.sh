@@ -5,7 +5,23 @@
 # shellcheck disable=SC2034
 
 RULES_FILE=".claude/pareto.md"
+# Reading notes ("fiches de lecture"): one JSON line per issue, kept in the hub (or in the
+# standalone repository), one file per scored repository: .claude/pareto-notes/<owner>-<repo>.jsonl
+NOTES_DIR=".claude/pareto-notes"
 REPO_RE='[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+'
+# How many comments of an issue are fetched. One value for list-issues.sh and read-issue.sh: the
+# cursor kept in a reading note (last comment, last edit) is computed on this window by the
+# second and compared with the one computed by the first, so the two must see the same comments.
+COMMENTS_WINDOW=100
+
+# Moves to the root of the git repository containing the current directory (nothing to do outside
+# a git repository). The rules file and the reading notes are looked up relative to the root, so
+# a script run from a sub-folder behaves as if run from the root. Call it before load_context.
+goto_root() {
+  local top
+  top=$(git rev-parse --show-toplevel 2>/dev/null) || return 0
+  [[ -z $top ]] || cd "$top" || return 1
+}
 
 # Default GitHub label of each class, overridden by a "## Labels" table in .claude/pareto.md.
 DEFAULT_LABELS="P0=pareto:P0
@@ -68,7 +84,9 @@ label_of() {
 # jq program turning the GraphQL issues page into list-issues.sh lines.
 # Arguments: repo, then the labels of P0, P1, P2 and quick-win in that repository, then
 # optionally "detail" to add the V, I, R, E factors of the last score comment after the score
-# ("-" when the comment does not carry them).
+# ("-" when the comment does not carry them), then optionally "cursor" to add, right after the
+# status, what a reading note is compared with: <last comment id>@<last edit>@<updatedAt>
+# (the last comment is the last one that is not a score comment; 0 and "-" when there is none).
 # A score comment is followed by nothing but GitHub's own bookkeeping: allow 2 minutes
 # between the comment and the issue's updatedAt before calling the issue stale.
 issues_jq_filter() {
@@ -83,8 +101,11 @@ def cls: if . == "$2" then "P0" elif . == "$3" then "P1" elif . == "$4" then "P2
    else "scored" end) as \$status
 | ((((\$last.body // "") | capture("^Pareto score: *(?<s>[0-9]+([.][0-9]+)?)") | .s)) // "-") as \$score
 | ((((\$last.body // "") | capture("[(]V(?<v>[0-9]+([.][0-9]+)?) x I(?<i>[0-9]+([.][0-9]+)?) x R(?<r>[0-9]+([.][0-9]+)?) / E(?<e>[0-9]+([.][0-9]+)?)"))) // {}) as \$f
+| ([.comments.nodes[] | select((.body // "") | startswith("Pareto score:") | not) | .databaseId] | map(select(. != null)) | max // 0) as \$lc
+| ([.lastEditedAt] + [.comments.nodes[].lastEditedAt] | map(select(. != null)) | max // "-") as \$ed
+| (if "${7:-}" == "cursor" then " | \(\$lc)@\(\$ed)@\(.updatedAt)" else "" end) as \$cur
 | (if "${6:-}" == "detail" then " | \(\$f.v // "-") | \(\$f.i // "-") | \(\$f.r // "-") | \(\$f.e // "-")" else "" end) as \$extra
-| "$1#\(.number) | \(\$status) | \(\$class) | \(\$tag) | \(\$score)\(\$extra) | \(.updatedAt[0:10]) | \(.title)"
+| "$1#\(.number) | \(\$status)\(\$cur) | \(\$class) | \(\$tag) | \(\$score)\(\$extra) | \(.updatedAt[0:10]) | \(.title)"
 EOF
 }
 
@@ -116,4 +137,83 @@ load_context() {
       ROLE=single
     fi
   fi
+}
+
+# Path of the reading-notes file of a repository, relative to the hub root.
+notes_path() {
+  echo "$NOTES_DIR/${1/\//-}.jsonl"
+}
+
+# Reading notes of a repository on stdout (empty when there are none): the local file when this
+# clone has it (hub or standalone repository), otherwise the hub's file through the API.
+# Requires load_context.
+notes_for() {
+  local f out err
+  f=$(notes_path "$1")
+  if [[ -f $f ]]; then
+    tr -d '\r' <"$f"
+  elif [[ -n $HUB && $HUB != "$HERE" ]]; then
+    err=$(mktemp)
+    if out=$(gh api "repos/$HUB/contents/$f" -H "Accept: application/vnd.github.raw" 2>"$err"); then
+      tr -d '\r' <<<"$out"
+    elif ! grep -qE 'HTTP 404|Not Found' "$err"; then
+      # Not "no notes yet" (a 404): authentication, quota or network. Say it, on stderr.
+      echo "# warning: reading notes of $1 unreadable ($(head -n 1 "$err" | tr -d '\r' | cut -c1-200)), every changed issue will be read in full" >&2
+    fi
+    rm -f "$err"
+  fi
+}
+
+# Joins the issue lines of list-issues (read on stdin, produced by issues_jq_filter in "cursor"
+# mode) with the reading notes of the repository, and decides how much of each issue must be read
+# again. Arguments: notes file, "detail" if the factors are present, "what" to add the one-line
+# description kept in the note (before the updated date, "-" when there is no note).
+# Input:  repo#n | status | cursor | class | tag | score [| V | I | R | E] | updated | title
+# Output: repo#n | status | read | class | tag | score [| V | I | R | E] [| what] | updated | title
+#   read: full    = the whole issue must be read (never read, or edited since the note)
+#         partial = the note plus the comments after the note's last one
+#         none    = nothing to read
+# With a note, the status ignores what the triage itself does (labels, "Pareto score:" comment):
+# only a new comment, an edit, or another change after the note makes the issue stale.
+apply_notes() {
+  awk -v notes="$1" -v detail="${2:-}" -v what="${3:-}" '
+    # Identifiers are compared as digit strings (no leading zero): comment ids go past 2^31 and
+    # some awks print large numbers in exponent form.
+    function gt(a, b) { return length(a) > length(b) || (length(a) == length(b) && (a "") > (b "")) }
+    BEGIN {
+      FS = " [|] "; OFS = " | "
+      while ((getline line < notes) > 0) {
+        if (!match(line, /"n":[0-9]+/)) continue
+        n = substr(line, RSTART + 4, RLENGTH - 4)
+        lc[n] = "0"; ed[n] = ""; up[n] = ""; wh[n] = "-"
+        if (match(line, /"lastComment":[0-9]+/)) lc[n] = substr(line, RSTART + 14, RLENGTH - 14)
+        if (match(line, /"edited":"[^"]*"/)) ed[n] = substr(line, RSTART + 10, RLENGTH - 11)
+        if (match(line, /"updatedAt":"[^"]*"/)) up[n] = substr(line, RSTART + 13, RLENGTH - 14)
+        if (match(line, /"what":"[^"]*"/)) wh[n] = substr(line, RSTART + 8, RLENGTH - 9)
+      }
+      close(notes)
+      updated = (detail == "detail") ? 11 : 7
+    }
+    {
+      sub(/\r$/, "")
+      num = $1; sub(/^[^#]*#/, "", num)
+      st = $2; rd = "none"
+      split($3, cu, "@")
+      if (st == "new") {
+        rd = "full"
+      } else if (num in lc) {
+        if (cu[2] != ed[num]) { st = "stale"; rd = "full" }
+        else if (gt(cu[1], lc[num])) { st = "stale"; rd = "partial" }
+        else if (st == "stale" && cu[3] != up[num]) { rd = "partial" }
+        else { st = "scored" }
+      } else if (st == "stale") {
+        rd = "full"
+      }
+      out = $1 OFS st OFS rd
+      for (i = 4; i <= NF; i++) {
+        if (what == "what" && i == updated) out = out OFS ((num in wh) ? wh[num] : "-")
+        out = out OFS $i
+      }
+      print out
+    }'
 }

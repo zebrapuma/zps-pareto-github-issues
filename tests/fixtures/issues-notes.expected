@@ -1,0 +1,12 @@
+acme/app#10 | scored | none | P1 | - | 6 | Quote form loses the customer phone | 2026-10-01 | note, untouched since
+acme/app#11 | stale | partial | P1 | - | 6 | Supplier prices published too low | 2026-10-05 | note, new comment
+acme/app#12 | stale | full | P1 | - | 6 | Invoice total rounds the wrong way | 2026-10-04 | note, body edited
+acme/app#13 | stale | partial | P1 | - | 6 | Nightly import skips weekends | 2026-10-06 | note, label changed by someone
+acme/app#14 | scored | none | P1 | - | 6 | Order mail goes to spam | 2026-10-01 | note, comment read before the score
+acme/app#15 | scored | none | P1 | - | 6 | Stock count differs from the ERP | 2026-10-06 | note, reread without a new score
+acme/app#16 | stale | full | P1 | - | 6 | - | 2026-10-05 | no note, new comment
+acme/app#17 | scored | none | P1 | - | 6 | - | 2026-10-01 | no note, untouched
+acme/app#18 | stale | full | P1 | - | 6 | Delivery date shown a day early | 2026-10-07 | note, comment edited
+acme/app#19 | new | full | - | - | - | Old note of a reopened request | 2026-10-01 | note but no score comment
+acme/app#20 | stale | partial | P1 | - | 6 | Customer cannot reset password | 2026-10-01 | note, comment right after the score
+acme/app#21 | scored | none | P1 | - | 6 | Product photos load too slowly | 2026-10-04 | note, edit already read

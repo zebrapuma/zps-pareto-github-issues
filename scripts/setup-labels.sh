@@ -7,6 +7,7 @@ set -euo pipefail
 # shellcheck source-path=SCRIPTDIR source=lib.sh
 . "$(dirname "$0")/lib.sh"
 
+goto_root
 load_context
 REPO=${1:-$HERE}
 if [[ -z $REPO ]]; then

@@ -1,0 +1,11 @@
+{"n":10,"lastComment":0,"edited":"-","updatedAt":"2026-10-01T09:59:00Z","v":3,"i":2,"r":2,"e":2,"score":6,"date":"2026-10-01","what":"Quote form loses the customer phone","summary":"Quote form drops the phone. / Sales call back by hand. / Fix is one field."}
+{"n":11,"lastComment":100,"edited":"-","updatedAt":"2026-10-01T09:59:00Z","v":3,"i":2,"r":2,"e":2,"score":6,"date":"2026-10-01","what":"Supplier prices published too low","summary":"Tricky: text with \"lastComment\":999 and \"what\":\"fake\" inside."}
+{"n":12,"lastComment":100,"edited":"-","updatedAt":"2026-10-01T09:59:00Z","v":3,"i":2,"r":2,"e":2,"score":6,"date":"2026-10-01","what":"Invoice total rounds the wrong way","summary":"s"}
+{"n":13,"lastComment":100,"edited":"-","updatedAt":"2026-10-01T09:59:00Z","v":3,"i":2,"r":2,"e":2,"score":6,"date":"2026-10-01","what":"Nightly import skips weekends","summary":"s"}
+{"n":14,"lastComment":100,"edited":"-","updatedAt":"2026-10-01T09:59:00Z","v":3,"i":2,"r":2,"e":2,"score":6,"date":"2026-10-01","what":"Order mail goes to spam","summary":"s"}
+{"n":15,"lastComment":205,"edited":"-","updatedAt":"2026-10-06T10:00:00Z","v":3,"i":2,"r":2,"e":2,"score":6,"date":"2026-10-01","what":"Stock count differs from the ERP","summary":"s"}
+{"n":18,"lastComment":100,"edited":"-","updatedAt":"2026-10-01T09:59:00Z","v":3,"i":2,"r":2,"e":2,"score":6,"date":"2026-10-01","what":"Delivery date shown a day early","summary":"s"}
+{"n":19,"lastComment":100,"edited":"-","updatedAt":"2026-10-01T09:59:00Z","v":3,"i":2,"r":2,"e":2,"score":6,"date":"2026-10-01","what":"Old note of a reopened request","summary":"s"}
+{"n":20,"lastComment":100,"edited":"-","updatedAt":"2026-10-01T09:59:00Z","v":3,"i":2,"r":2,"e":2,"score":6,"date":"2026-10-01","what":"Customer cannot reset password","summary":"s"}
+{"n":21,"lastComment":0,"edited":"2026-10-04T08:00:00Z","updatedAt":"2026-10-04T08:00:00Z","v":3,"i":2,"r":2,"e":2,"score":6,"date":"2026-10-01","what":"Product photos load too slowly","summary":"s"}
+{"n":10,"lastComment":0,"edited":"-","updatedAt":"2026-10-01T09:59:00Z","v":3,"i":2,"r":2,"e":2,"score":6,"date":"2026-10-01","what":"Quote form loses the customer phone","summary":"last line of a number wins"}

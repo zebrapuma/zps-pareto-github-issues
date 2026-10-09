@@ -1,0 +1,291 @@
+{
+  "data": {
+    "repository": {
+      "issues": {
+        "nodes": [
+          {
+            "number": 10,
+            "title": "note, untouched since",
+            "updatedAt": "2026-10-01T10:00:30Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "priority:medium"
+                }
+              ]
+            },
+            "comments": {
+              "nodes": [
+                {
+                  "databaseId": 101,
+                  "body": "Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-01). note",
+                  "createdAt": "2026-10-01T10:00:00Z"
+                }
+              ]
+            }
+          },
+          {
+            "number": 11,
+            "title": "note, new comment",
+            "updatedAt": "2026-10-05T09:00:00Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "priority:medium"
+                }
+              ]
+            },
+            "comments": {
+              "nodes": [
+                {
+                  "databaseId": 101,
+                  "body": "Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-01). note",
+                  "createdAt": "2026-10-01T10:00:00Z"
+                },
+                {
+                  "databaseId": 102,
+                  "body": "more info",
+                  "createdAt": "2026-10-05T09:00:00Z"
+                }
+              ]
+            }
+          },
+          {
+            "number": 12,
+            "title": "note, body edited",
+            "updatedAt": "2026-10-04T08:00:00Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "priority:medium"
+                }
+              ]
+            },
+            "comments": {
+              "nodes": [
+                {
+                  "databaseId": 101,
+                  "body": "Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-01). note",
+                  "createdAt": "2026-10-01T10:00:00Z"
+                }
+              ]
+            },
+            "lastEditedAt": "2026-10-04T08:00:00Z"
+          },
+          {
+            "number": 13,
+            "title": "note, label changed by someone",
+            "updatedAt": "2026-10-06T10:00:00Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "priority:medium"
+                }
+              ]
+            },
+            "comments": {
+              "nodes": [
+                {
+                  "databaseId": 101,
+                  "body": "Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-01). note",
+                  "createdAt": "2026-10-01T10:00:00Z"
+                }
+              ]
+            }
+          },
+          {
+            "number": 14,
+            "title": "note, comment read before the score",
+            "updatedAt": "2026-10-01T10:00:20Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "priority:medium"
+                }
+              ]
+            },
+            "comments": {
+              "nodes": [
+                {
+                  "databaseId": 100,
+                  "body": "seen",
+                  "createdAt": "2026-10-01T09:58:00Z"
+                },
+                {
+                  "databaseId": 101,
+                  "body": "Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-01). note",
+                  "createdAt": "2026-10-01T10:00:00Z"
+                }
+              ]
+            }
+          },
+          {
+            "number": 15,
+            "title": "note, reread without a new score",
+            "updatedAt": "2026-10-06T10:00:00Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "priority:medium"
+                }
+              ]
+            },
+            "comments": {
+              "nodes": [
+                {
+                  "databaseId": 201,
+                  "body": "Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-01). note",
+                  "createdAt": "2026-10-01T10:00:00Z"
+                },
+                {
+                  "databaseId": 205,
+                  "body": "seen later",
+                  "createdAt": "2026-10-06T10:00:00Z"
+                }
+              ]
+            }
+          },
+          {
+            "number": 16,
+            "title": "no note, new comment",
+            "updatedAt": "2026-10-05T09:00:00Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "priority:medium"
+                }
+              ]
+            },
+            "comments": {
+              "nodes": [
+                {
+                  "databaseId": 101,
+                  "body": "Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-01). note",
+                  "createdAt": "2026-10-01T10:00:00Z"
+                },
+                {
+                  "databaseId": 102,
+                  "body": "more info",
+                  "createdAt": "2026-10-05T09:00:00Z"
+                }
+              ]
+            }
+          },
+          {
+            "number": 17,
+            "title": "no note, untouched",
+            "updatedAt": "2026-10-01T10:00:30Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "priority:medium"
+                }
+              ]
+            },
+            "comments": {
+              "nodes": [
+                {
+                  "databaseId": 101,
+                  "body": "Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-01). note",
+                  "createdAt": "2026-10-01T10:00:00Z"
+                }
+              ]
+            }
+          },
+          {
+            "number": 18,
+            "title": "note, comment edited",
+            "updatedAt": "2026-10-07T10:00:00Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "priority:medium"
+                }
+              ]
+            },
+            "comments": {
+              "nodes": [
+                {
+                  "databaseId": 101,
+                  "body": "Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-01). note",
+                  "createdAt": "2026-10-01T10:00:00Z"
+                },
+                {
+                  "databaseId": 100,
+                  "body": "seen, then edited",
+                  "createdAt": "2026-10-01T09:58:00Z",
+                  "lastEditedAt": "2026-10-07T10:00:00Z"
+                }
+              ]
+            }
+          },
+          {
+            "number": 19,
+            "title": "note but no score comment",
+            "updatedAt": "2026-10-01T10:00:00Z",
+            "labels": {
+              "nodes": []
+            },
+            "comments": {
+              "nodes": [
+                {
+                  "databaseId": 100,
+                  "body": "hello",
+                  "createdAt": "2026-10-01T09:58:00Z"
+                }
+              ]
+            }
+          },
+          {
+            "number": 20,
+            "title": "note, comment right after the score",
+            "updatedAt": "2026-10-01T10:01:00Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "priority:medium"
+                }
+              ]
+            },
+            "comments": {
+              "nodes": [
+                {
+                  "databaseId": 101,
+                  "body": "Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-01). note",
+                  "createdAt": "2026-10-01T10:00:00Z"
+                },
+                {
+                  "databaseId": 102,
+                  "body": "quick follow-up",
+                  "createdAt": "2026-10-01T10:01:00Z"
+                }
+              ]
+            }
+          },
+          {
+            "number": 21,
+            "title": "note, edit already read",
+            "updatedAt": "2026-10-04T08:00:30Z",
+            "labels": {
+              "nodes": [
+                {
+                  "name": "priority:medium"
+                }
+              ]
+            },
+            "comments": {
+              "nodes": [
+                {
+                  "databaseId": 101,
+                  "body": "Pareto score: 6 -> P1 (V3 x I2 x R2 / E2, 2026-10-01). note",
+                  "createdAt": "2026-10-04T08:00:30Z"
+                }
+              ]
+            },
+            "lastEditedAt": "2026-10-04T08:00:00Z"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -3,9 +3,12 @@
 # that apply in the current repository. Read-only.
 # Usage: pareto-context.sh [--scope-only]
 set -euo pipefail
+# Absolute, and fixed before goto_root: $0 may be relative to the directory goto_root leaves.
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 # shellcheck source-path=SCRIPTDIR source=lib.sh
-. "$(dirname "$0")/lib.sh"
+. "$SCRIPT_DIR/lib.sh"
 
+goto_root
 load_context
 
 echo "## Scope"
@@ -36,7 +39,7 @@ if [[ $ROLE == member ]]; then
     echo
     echo "WARNING: cannot read $RULES_FILE in the hub $HUB (missing file or no access). Plugin defaults apply."
     echo
-    cat "$(dirname "$0")/../templates/pareto.md"
+    cat "$SCRIPT_DIR/../templates/pareto.md"
   fi
   echo
   echo "## Local notes (this repository)"
@@ -49,5 +52,5 @@ elif [[ -n $LOCAL_RULES ]]; then
 else
   echo "## Scoring rules (plugin defaults: run /zps-pareto:setup to customize)"
   echo
-  cat "$(dirname "$0")/../templates/pareto.md"
+  cat "$SCRIPT_DIR/../templates/pareto.md"
 fi

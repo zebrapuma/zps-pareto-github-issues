@@ -15,6 +15,14 @@ Inspired by RICE and WSJF: value delivered, weighted by how many it reaches, div
 
 **Score = (V × I × R) / E**, rounded to one decimal.
 
+<!-- Optional: the scales above are generic. Impact and Reach can be given another meaning that
+     fits your data, without changing the formula or the 1-5 and 1-3 ranges. For example:
+     - Impact = how many rows are concerned (records in your main system first, then catalogue or
+       import rows), instead of "someone is blocked today";
+     - Reach (or "Risk") = money lost or exposed, instead of the number of people reached.
+     Write the labels you choose in the table (and the thresholds only if you have measured them):
+     the plugin never assumes any threshold, it reads this file on every run. -->
+
 ## Classes
 
 Every scored issue gets exactly one priority class, and possibly the `quick-win` tag on top of it.
