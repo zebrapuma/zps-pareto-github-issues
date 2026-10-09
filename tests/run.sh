@@ -238,7 +238,7 @@ ls2() { (cd "$tmp/member2" && PATH="$tmp/bin:$PATH" JQ="$JQ" FIXTURE="$root/$NJ"
 out=$(ls2 404)
 check "hub notes: a 404 means no notes yet, no warning" "0" "$(grep -c 'warning' <<<"$out" || true)"
 out=$(ls2 401)
-check "hub notes: another failure is reported with its reason" "1" "$(grep -c '^# warning: reading notes unreadable (gh: HTTP 401: Bad credentials), every changed issue will be read in full$' <<<"$out" || true)"
+check "hub notes: another failure is reported with its reason" "1" "$(grep -c '^# warning: reading notes of acme/app unreadable (gh: HTTP 401: Bad credentials), every changed issue will be read in full$' <<<"$out" || true)"
 check "hub notes: the listing still answers after a failure (everything is read in full)" "0" "$(grep -v '^#' <<<"$out" | grep -c ' | partial | ' || true)"
 out=$(ls2 ok)
 check "hub notes: readable notes are used" "$(cat "$FIX/issues-notes.expected")" "$(grep -v '^#' <<<"$out")"
@@ -248,6 +248,23 @@ err=$(cd "$tmp/hubwork" && PATH="$tmp/bin:$PATH" JQ="$JQ" GRAPHQL_FAIL="gh: API 
 check "read-issue.sh: a failing gh gives status 1" "1" "$rc"
 check "read-issue.sh: the first line of gh's answer is the reason, on stderr" "# error: cannot read acme/app#30: gh: API rate limit exceeded (HTTP 403)" "$err"
 check "read-issue.sh: nothing on stdout when gh fails" "0" "$(wc -c <"$tmp/read-out" | tr -d ' ')"
+
+# ---- list-issues.sh says why gh failed (it used to say "missing or no access" whatever the cause).
+out=$(cd "$tmp/hubwork" && PATH="$tmp/bin:$PATH" JQ="$JQ" GRAPHQL_FAIL="gh: API rate limit exceeded (HTTP 403)" bash "$root/scripts/list-issues.sh" 2>/dev/null | tr -d '') && rc=0 || rc=$?
+check "list-issues.sh: the first line of gh's answer is the reason" "acme/app | error: cannot read issues: gh: API rate limit exceeded (HTTP 403)" "$(grep -v '^#' <<<"$out")"
+check "list-issues.sh: a failing repository does not stop the listing" "0" "$rc"
+
+# ---- pareto-context.sh called by a relative path from a subdirectory: goto_root moves to the
+# repository root, so the default rules (templates/pareto.md next to the scripts) must still be found.
+# The scripts are copied next to the test repositories so that the relative path depends on the depth.
+mkdir -p "$tmp/plug" "$tmp/member2/sub" "$tmp/bare/sub"
+cp -r "$root/scripts" "$root/templates" "$tmp/plug/"
+git init -q "$tmp/bare"
+for d in member2 bare; do
+  out=$(cd "$tmp/$d/sub" && PATH="$tmp/bin:$PATH" JQ="$JQ" bash ../../plug/scripts/pareto-context.sh 2>&1 | tr -d '') || true
+  check "pareto-context.sh ($d): a relative path does not lose the default rules" "0" "$(grep -c 'No such file' <<<"$out" || true)"
+  check "pareto-context.sh ($d): the default rules are printed" "1" "$(grep -c '^# Pareto scoring rules' <<<"$out" || true)"
+done
 
 if ((failures > 0)); then
   echo "$failures test(s) failed"

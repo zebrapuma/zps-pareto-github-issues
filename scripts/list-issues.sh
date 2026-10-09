@@ -84,7 +84,8 @@ only_classes() {
 }
 
 notes_file=$(mktemp)
-trap 'rm -f "$notes_file"' EXIT
+err_file=$(mktemp)
+trap 'rm -f "$notes_file" "$err_file"' EXIT
 
 for repo in "${REPOS[@]}"; do
   if ! [[ $repo =~ ^$REPO_RE$ ]]; then
@@ -104,9 +105,11 @@ for repo in "${REPOS[@]}"; do
   # Captured first: on a GraphQL error gh still prints the raw response on stdout.
   if out=$(gh api graphql --paginate \
     -f owner="${repo%%/*}" -f name="${repo#*/}" -f query="${QUERY//__WINDOW__/$COMMENTS_WINDOW}" \
-    --jq "$(issues_jq_filter "$repo" "$p0" "$p1" "$p2" "$qw" "$DETAIL" cursor)" 2>/dev/null); then
+    --jq "$(issues_jq_filter "$repo" "$p0" "$p1" "$p2" "$qw" "$DETAIL" cursor)" 2>"$err_file"); then
     [[ -z $out ]] || apply_notes "$notes_file" "$DETAIL" "$WHAT" <<<"$out" | only_classes
   else
-    echo "$repo | error: cannot read issues (repository missing or no access)"
+    # The reason is the first line of gh's answer (authentication, quota, network, missing
+    # repository, refused query), as in read-issue.sh.
+    echo "$repo | error: cannot read issues: $(head -n 1 "$err_file" | tr -d '\r' | cut -c1-300)"
   fi
 done

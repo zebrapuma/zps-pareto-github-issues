@@ -158,7 +158,7 @@ notes_for() {
       tr -d '\r' <<<"$out"
     elif ! grep -qE 'HTTP 404|Not Found' "$err"; then
       # Not "no notes yet" (a 404): authentication, quota or network. Say it, on stderr.
-      echo "# warning: reading notes unreadable ($(head -n 1 "$err" | tr -d '\r' | cut -c1-200)), every changed issue will be read in full" >&2
+      echo "# warning: reading notes of $1 unreadable ($(head -n 1 "$err" | tr -d '\r' | cut -c1-200)), every changed issue will be read in full" >&2
     fi
     rm -f "$err"
   fi
