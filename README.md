@@ -1,5 +1,7 @@
 # zps-pareto: never lose a request, always work on the vital few
 
+[![validate](https://github.com/zebrapuma/zps-pareto-github-issues/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/zebrapuma/zps-pareto-github-issues/actions/workflows/validate.yml) [![release](https://github.com/zebrapuma/zps-pareto-github-issues/actions/workflows/release.yml/badge.svg)](https://github.com/zebrapuma/zps-pareto-github-issues/actions/workflows/release.yml) [![Release](https://img.shields.io/github/v/release/zebrapuma/zps-pareto-github-issues)](https://github.com/zebrapuma/zps-pareto-github-issues/releases)
+
 A [Claude Code](https://code.claude.com) plugin by [ZebraPuma Services](https://zebrapuma.be). 🇫🇷 [Version française](README.fr.md)
 
 Most backlogs fail the same way: requests arrive by email, chat and phone, some get lost, and the loudest ones get done first. `zps-pareto` turns Claude Code into a disciplined request manager built on the 80/20 rule:
